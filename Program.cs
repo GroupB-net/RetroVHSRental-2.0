@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using RetroVHSRental.Data;
+using RetroVHSRental.Repository;
+
 namespace RetroVHSRental
 {
     public class Program
@@ -7,6 +11,12 @@ namespace RetroVHSRental
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
+            builder.Services.AddTransient<IRentalRepository, RentalRepository>();
+            builder.Services.AddTransient<IFilmRepository, FilmRepository>();
+            builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
