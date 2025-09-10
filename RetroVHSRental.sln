@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroVHSRental", "RetroVHSRental.csproj", "{5DE20CBF-2028-4BA0-8B43-840333146BD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DE20CBF-2028-4BA0-8B43-840333146BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE20CBF-2028-4BA0-8B43-840333146BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE20CBF-2028-4BA0-8B43-840333146BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE20CBF-2028-4BA0-8B43-840333146BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C68D70D-BE96-4A84-A926-38757FB097D7}
+	EndGlobalSection
+EndGlobal
