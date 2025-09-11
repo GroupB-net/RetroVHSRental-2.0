@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RetroVHSRental.Repository
 {
-    public class RentalRepository
+    public class RentalRepository : IRentalRepository
     {
         private readonly ApplicationDbContext context;
 
