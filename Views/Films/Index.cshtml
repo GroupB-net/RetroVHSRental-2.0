@@ -1,0 +1,47 @@
+﻿@model IEnumerable<RetroVHSRental.Models.Film>
+@{
+    ViewData["Title"] = "Films";
+}
+
+<h1>Films</h1>
+
+<form method="get" asp-action="Index">
+    <div class="form-group">
+        <input type="text" name="searchString" value="@Context.Request.Query["searchString"]" class="form-control" placeholder="Search by title..." />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
+</form>
+
+<p>
+    Sort by:
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]">Title</a> |
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSortParm"]">Release Year</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Release Year</th>
+            <th>Rental Duration</th>
+            <th>Rental Rate</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            <tr>
+                <td>@film.Title</td>
+                <td>@film.Description</td>
+                <td>@film.Release_year</td>
+                <td>@film.Rental_duration days</td>
+                <td>@film.Rental_rate €</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@film.FilmId" class="btn btn-info btn-sm">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
