@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetroVHSRental.Models
 {
+    [Table("customer")]
     public class Customer
     {
         [Key]

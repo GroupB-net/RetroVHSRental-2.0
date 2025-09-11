@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RetroVHSRental.Models
 {
+    [Table("rental")]
     public class Rental
     {
         [Key]
