@@ -16,7 +16,7 @@ namespace RetroVHSRental.Models
         [Column("customer_id")]
         public int CustomerId { get; set; }
         [Column("return_date")]
-        public DateTime ReturnDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
         [Column("staff_id")]
         public byte StaffId { get; set; }
         [Column("last_update")]
