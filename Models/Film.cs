@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetroVHSRental.Models
 {
-
+    [Table("film")]
     public class Film
     {
         [Key]
