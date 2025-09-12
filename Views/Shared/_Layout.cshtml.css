@@ -46,3 +46,22 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+/* flexa och wrapa på större skärmar */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+/* På skärmar smalare än 576px: ingen wrap utan scroll */
+@media (max-width: 576px) {
+    .pagination {
+        flex-wrap: nowrap;
+    }
+
+        .pagination .page-item {
+            flex: 0 0 auto;
+        }
+}

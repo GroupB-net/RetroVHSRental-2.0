@@ -17,9 +17,18 @@ namespace RetroVHSRental.Controllers
             _filmRepository = filmRepository;
         }
         // GET: RentalController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var rentals = await _rentalRepository.GetAllAsync();
+            int pageSize = 20;
+
+            int totalItems = await _rentalRepository.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var rentals = await _rentalRepository.GetPagedAsync(page, pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
             return View(rentals);
         }
 
