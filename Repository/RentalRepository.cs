@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RetroVHSRental.Repository
 {
-    public class RentalRepository: IRentalRepository
+    public class RentalRepository : IRentalRepository
     {
         private readonly ApplicationDbContext context;
 
@@ -35,6 +35,19 @@ namespace RetroVHSRental.Repository
         {
             context.Rentals.Remove(rental);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Rental>> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            return await context.Rentals
+                .OrderBy(r => r.RentalId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+        public async Task<int> CountAsync()
+        {
+            return await context.Rentals.CountAsync();
         }
     }
 }

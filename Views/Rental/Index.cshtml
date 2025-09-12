@@ -1,0 +1,130 @@
+﻿@model IEnumerable<RetroVHSRental.Models.Rental>
+
+@{
+    ViewData["Title"] = "Index";
+
+    int totalPages = (int)ViewBag.TotalPages;
+    int currentPage = (int)ViewBag.CurrentPage;
+    int outerCount = 5;  // antal sidor i början och slutet
+    int aroundCount = 3;   // antal sidor kring currentPage
+
+    int firstEnd = Math.Min(outerCount, totalPages);
+    int lastStart = Math.Max(totalPages - outerCount + 1, 1);
+    int middleStart = Math.Max(firstEnd + 1, currentPage - aroundCount);
+    int middleEnd = Math.Min(lastStart - 1, currentPage + aroundCount);
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RentalDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InventoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.last_update)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InventoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReturnDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StaffId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.last_update)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RentalId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RentalId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RentalId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div class="pagination-wrapper">
+<nav aria-label="Rental pagination">
+    <ul class="pagination flex-wrap justify-content-center">
+
+        <!-- Föregående -->
+        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)">Föregående</a>
+        </li>
+
+        <!-- Första blocket -->
+        @for (int i = 1; i <= firstEnd; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        <!-- Ellips efter första blocket -->
+        @if (middleStart > firstEnd)
+        {
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+        }
+
+        <!-- Mittblock kring aktuell sida -->
+        @for (int i = middleStart; i <= middleEnd; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        <!-- Ellips före sista blocket -->
+        @if (middleEnd < lastStart)
+        {
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+        }
+
+        <!-- Sista blocket -->
+        @for (int i = lastStart; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        <!-- Nästa -->
+        <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)">Nästa</a>
+        </li>
+
+    </ul>
+</nav>
+</div>
+

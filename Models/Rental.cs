@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RetroVHSRental.Models
 {
+    [Table("rental")]
     public class Rental
     {
         [Key]
@@ -15,11 +16,11 @@ namespace RetroVHSRental.Models
         [Column("customer_id")]
         public int CustomerId { get; set; }
         [Column("return_date")]
-        public DateTime ReturnDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
         [Column("staff_id")]
-        public int StaffId { get; set; }
+        public byte StaffId { get; set; }
         [Column("last_update")]
         public DateTime last_update { get; set; }
         public Customer Customer { get; set; }
-            }
+    }
 }

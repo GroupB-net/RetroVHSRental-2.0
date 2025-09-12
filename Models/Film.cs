@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetroVHSRental.Models
 {
-
+    [Table("film")]
     public class Film
     {
         [Key]
@@ -17,7 +17,7 @@ namespace RetroVHSRental.Models
         [Column("release_year")]
         public string Release_year { get; set; }
         [Column("rental_duration")]
-        public int Rental_duration {  get; set; }
+        public byte Rental_duration {  get; set; }
         [Column("rental_rate")]
         public decimal Rental_rate { get; set; }
 
