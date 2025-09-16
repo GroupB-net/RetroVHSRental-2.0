@@ -41,6 +41,9 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@film.FilmId" class="btn btn-info btn-sm">Details</a>
                 </td>
+                <td>
+                    <a asp-controller="Rental" asp-action="Create" asp-route-id="@film.FilmId" class="btn btn-info btn-sm">Rent</a>
+                </td>
             </tr>
         }
     </tbody>

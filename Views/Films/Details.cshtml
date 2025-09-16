@@ -10,4 +10,6 @@
 <p><strong>Rental Duration:</strong> @Model.Rental_duration days</p>
 <p><strong>Rental Rate:</strong> @Model.Rental_rate €</p>
 
+<a asp-controller="Rental" asp-action="Create" asp-route-id="@Model.FilmId" class="btn btn-info btn-sm">Rent</a>
+
 <a asp-action="Index" class="btn btn-secondary">Back to list</a>
