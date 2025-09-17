@@ -21,5 +21,20 @@ namespace RetroVHSRental.Repository
         {
             return await _context.Films.FirstOrDefaultAsync(f => f.FilmId == id);
         }
+
+        //Pagination
+        public async Task<IEnumerable<Film>> GetAllAsync(int pageNumber, int pageSize)
+        {
+            return await _context.Films
+                .OrderBy(f => f.FilmId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _context.Films.CountAsync();
+        }
     }
 }
