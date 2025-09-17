@@ -48,3 +48,49 @@
         }
     </tbody>
 </table>
+
+<p>Visar sida @ViewBag.CurrentPage av @ViewBag.TotalPages</p>
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+
+        <!--Föregående-->
+        <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)">Föregående</a>
+
+        <!--Aktuell-->
+        <li class="page-item @(ViewBag.CurrentPage == 1 ? "active" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="1">1</a>
+        </li>
+
+        <!--Ellips -->
+        @if (ViewBag.CurrentPage > 4)
+        {
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+        }
+
+        <!-- Mittblock runt aktuell sida -->
+        @for (int i = Math.Max(2, (int)ViewBag.CurrentPage - 2); i <= Math.Min((int)ViewBag.TotalPages - 1, (int)ViewBag.CurrentPage + 2); i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        <!-- Ellips om vi är långt ifrån slutet-->
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 3)
+        {
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+        }
+
+        <!--Sista sidan-->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@ViewBag.TotalPages">@ViewBag.TotalPages</a>
+            </li>
+        }
+        <!--Nästa-->
+        <li class="page-item @(ViewBag.CurrentPage >= ViewBag.TotalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)">Nästa</a>
+    </ul>
+</nav>

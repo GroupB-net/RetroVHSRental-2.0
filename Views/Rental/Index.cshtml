@@ -74,57 +74,54 @@
     </tbody>
 </table>
 
-<div class="pagination-wrapper">
-<nav aria-label="Rental pagination">
-    <ul class="pagination flex-wrap justify-content-center">
+<p>Visar sida @ViewBag.CurrentPage av @ViewBag.TotalPages</p>
+
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
 
         <!-- Föregående -->
-        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)">Föregående</a>
+        <li class="page-item @(ViewBag.CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)">Föregående</a>
         </li>
 
-        <!-- Första blocket -->
-        @for (int i = 1; i <= firstEnd; i++)
-        {
-            <li class="page-item @(i == currentPage ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
-            </li>
-        }
+        <!-- Första sidan -->
+        <li class="page-item @(ViewBag.CurrentPage == 1 ? "active" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="1">1</a>
+        </li>
 
-        <!-- Ellips efter första blocket -->
-        @if (middleStart > firstEnd)
+        <!-- Ellips om vi är långt från början -->
+        @if (ViewBag.CurrentPage > 4)
         {
             <li class="page-item disabled"><span class="page-link">…</span></li>
         }
 
-        <!-- Mittblock kring aktuell sida -->
-        @for (int i = middleStart; i <= middleEnd; i++)
+        <!-- Mittblock runt aktuell sida -->
+        @for (int i = Math.Max(2, ViewBag.CurrentPage - 2); i <= Math.Min(ViewBag.TotalPages - 1, ViewBag.CurrentPage + 2); i++)
         {
-            <li class="page-item @(i == currentPage ? "active" : "")">
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                 <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
             </li>
         }
 
-        <!-- Ellips före sista blocket -->
-        @if (middleEnd < lastStart)
+        <!-- Ellips före sista sidan -->
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages - 3)
         {
             <li class="page-item disabled"><span class="page-link">…</span></li>
         }
 
-        <!-- Sista blocket -->
-        @for (int i = lastStart; i <= totalPages; i++)
+        <!-- Sista sidan -->
+        @if (ViewBag.TotalPages > 1)
         {
-            <li class="page-item @(i == currentPage ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@ViewBag.TotalPages">@ViewBag.TotalPages</a>
             </li>
         }
 
         <!-- Nästa -->
-        <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
-            <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)">Nästa</a>
+        <li class="page-item @(ViewBag.CurrentPage >= ViewBag.TotalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)">Nästa</a>
         </li>
-
     </ul>
 </nav>
-</div>
+
 
