@@ -14,11 +14,13 @@ namespace RetroVHSRental.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string searchString, string sortOrder, int page = 1)
         {
+            int pageSize = 10; //filmer per sida
+
             var films = await _filmRepository.GetAllAsync();
 
-            
+
             if (!string.IsNullOrEmpty(searchString))
             {
                 films = films.Where(f => f.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase));
@@ -36,8 +38,22 @@ namespace RetroVHSRental.Controllers
                 _ => films.OrderBy(f => f.Title),
             };
 
-            return View(films);
+            //pagination
+            int totalFilms = films.Count();
+            var totalPages = (int)Math.Ceiling(totalFilms / (double)pageSize);
+
+            var filmsPage = films
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = page;
+
+
+            return View(filmsPage);
         }
+
 
         // GET: Films/Details/5
         public async Task<IActionResult> Details(int id)
