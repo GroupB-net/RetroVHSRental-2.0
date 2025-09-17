@@ -7,11 +7,15 @@
 <h1>Create</h1>
 
 <h4>Rental</h4>
+
+<h4> <strong>@ViewBag.Film.Title</strong></h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           <input type="hidden" name="FilmId" value="@ViewBag.Film" />
             <div class="form-group">
                 <label asp-for="RentalDate" class="control-label"></label>
                 <input asp-for="RentalDate" class="form-control" />
@@ -49,7 +53,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Films" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

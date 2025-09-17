@@ -44,10 +44,10 @@ namespace RetroVHSRental.Controllers
         }
 
         // GET: RentalController/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int id)
         {
             ViewBag.Customer = await _customerRepository.GetAllAsync();
-            ViewBag.Film = await _filmRepository.GetAllAsync();
+            ViewBag.Film = await _filmRepository.GetByIdAsync(id);
 
             return View();
         }
