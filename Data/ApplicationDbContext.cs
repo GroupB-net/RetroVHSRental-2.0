@@ -12,6 +12,7 @@ namespace RetroVHSRental.Data
         public DbSet<Film> Films { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Staff> Staff {  get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
