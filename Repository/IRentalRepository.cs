@@ -12,5 +12,7 @@ namespace RetroVHSRental.Repository
 
         Task<IEnumerable<Rental>> GetPagedAsync(int pageNumber, int pageSize);
         Task<int> CountAsync();
+
+        Task<IEnumerable<Rental>> RentalsExpiringToday();
     }
 }

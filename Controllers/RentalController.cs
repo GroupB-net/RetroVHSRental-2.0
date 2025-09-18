@@ -125,5 +125,12 @@ namespace RetroVHSRental.Controllers
                 return View();
             }
         }
+
+        public async Task<IActionResult> ExpiringToday()
+        {
+            ViewBag.Rental = await _rentalRepository.RentalsExpiringToday();
+            return View();
+
+        }
     }
 }
