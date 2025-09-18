@@ -21,6 +21,6 @@ namespace RetroVHSRental.Models
         public byte StaffId { get; set; }
         [Column("last_update")]
         public DateTime last_update { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
     }
 }

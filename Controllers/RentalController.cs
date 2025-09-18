@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RetroVHSRental.Models;
 using RetroVHSRental.Repository;
 
@@ -46,10 +47,14 @@ namespace RetroVHSRental.Controllers
         // GET: RentalController/Create
         public async Task<IActionResult> Create(int id)
         {
-            ViewBag.Customer = await _customerRepository.GetAllAsync();
-            ViewBag.Film = await _filmRepository.GetByIdAsync(id);
+            var customers = await _customerRepository.GetAllAsync();
+            var film = await _filmRepository.GetByIdAsync(id);
 
-            return View();
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
+            ViewBag.Film = film;
+
+            var rental = new Rental { RentalDate = DateTime.Now};
+            return View(rental);
         }
 
         // POST: RentalController/Create
@@ -57,17 +62,18 @@ namespace RetroVHSRental.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Rental rental)
         {
+            rental.last_update = DateTime.Now;
             if (ModelState.IsValid)
-              {
-                  rental.RentalDate = DateTime.Now;
-                  await _rentalRepository.AddAsync(rental);
-                  return RedirectToAction(nameof(Index));
-              }
-
-            ViewBag.Customer = await _customerRepository.GetAllAsync();
+            {
+                
+                await _rentalRepository.AddAsync(rental);
+                return RedirectToAction(nameof(Index));
+            }
+            var customers = await _customerRepository.GetAllAsync();
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Film = await _filmRepository.GetAllAsync();
             return View(rental);
-         
+
         }
 
         // GET: RentalController/Edit/5
@@ -113,7 +119,7 @@ namespace RetroVHSRental.Controllers
             try
             {
                 var rental = await _rentalRepository.GetByIdAsync(id);
-                if (rental!=null)
+                if (rental != null)
                 {
                     await _rentalRepository.RemoveAsync(rental);
 
