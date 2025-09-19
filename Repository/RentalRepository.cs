@@ -50,5 +50,15 @@ namespace RetroVHSRental.Repository
         {
             return await context.Rentals.CountAsync();
         }
+
+        public async Task<IEnumerable<Rental>> RentalsExpiringToday()
+        {
+            var todaysDate = DateTime.Today; //skapar en variabel för dagens datum
+            var tomorrow = todaysDate.AddDays(1);
+
+            return await context.Rentals.Where(r => r.ReturnDate >= todaysDate && r.ReturnDate < tomorrow).ToListAsync();
+
+            
+        }
     }
 }

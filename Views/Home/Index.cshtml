@@ -1,23 +1,48 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
+
+<div>
+    <h4>Rentals expiring today</h4>
+
+    <table class="table">
+    <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Return Date</th>
+            </tr>
+    </thead>
+    <tbody>
+            @foreach (var rental in ViewBag.ExpiringRentals as IEnumerable<RetroVHSRental.Models.Rental>)
+            {
+                <tr>
+                    <td>@rental.CustomerId</td>
+                    <td>@rental.ReturnDate</td>
+                </tr>
+        }
+        
+    </tbody> 
+</table>
+
+</div>
 
 <div class="row">
     <div class="col-sm-6 mb-3 mb-sm-0">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Filmer</h5>
-                <p class="card-text">Lista alla filmer och välj vilken som ska hyras.</p>
-                <a asp-controller="Films" asp-action="Index" class="btn btn-primary">Gå till filmer</a>
+                <h5>Films</h5>
+                <p class="card-text">List all films and choose your title.</p>
+                <a asp-controller="Films" asp-action="Index" class="btn btn-outline-success">Go to films</a>
             </div>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Kunder</h5>
-                <p class="card-text">Lista alla kunder.</p>
-                <a asp-controller="Customer" asp-action="Index" class="btn btn-primary">Gå till kunder</a>
+                <h5>Customers</h5>
+                <p class="card-text">List all customers.</p>
+                <a asp-controller="Customer" asp-action="Index" class="btn btn-outline-success">Go to customers</a>
             </div>
         </div>
     </div>
@@ -27,18 +52,18 @@
     <div class="col-sm-6 mb-3 mb-sm-0">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Uthyrningar</h5>
-                <p class="card-text">Lista alla uthyrningar.</p>
-                <a asp-controller="Rental" asp-action="Index" class="btn btn-primary">Gå till uthyrningar</a>
+                <h5>Rentals</h5>
+                <p class="card-text">List all rentals.</p>
+                <a asp-controller="Rental" asp-action="Index" class="btn btn-outline-success">Go to rentals</a>
             </div>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Personal</h5>
-                <p class="card-text">Lista all personal och lägg till nya anställda.</p>
-                <a asp-controller="Staff" asp-action="Index" class="btn btn-primary">Gå till personal</a>
+                <h5>Staff</h5>
+                <p class="card-text">List all staff and add new.</p>
+                <a asp-controller="Staff" asp-action="Index" class="btn btn-outline-success">Go to staff</a>
             </div>
         </div>
     </div>

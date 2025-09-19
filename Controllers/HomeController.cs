@@ -9,17 +9,24 @@ namespace RetroVHSRental.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IFilmRepository _filmRepository;
+        private readonly IRentalRepository _rentalRepository;
 
-        public HomeController(ILogger<HomeController> logger, IFilmRepository filmRepository)
+
+        public HomeController(ILogger<HomeController> logger, IFilmRepository filmRepository, IRentalRepository rentalRepository)
         {
             _logger = logger;
             _filmRepository = filmRepository;
+            _rentalRepository = rentalRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var films = await _filmRepository.GetAllAsync();
-            return View(films);
+            //var films = await _filmRepository.GetAllAsync();
+            //return View(films);
+
+            var rentals = await _rentalRepository.RentalsExpiringToday();
+            ViewBag.ExpiringRentals = rentals;
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
