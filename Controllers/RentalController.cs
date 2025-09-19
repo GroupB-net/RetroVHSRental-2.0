@@ -11,11 +11,14 @@ namespace RetroVHSRental.Controllers
         private readonly IRentalRepository _rentalRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IFilmRepository _filmRepository;
-        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository)
+        private readonly IInventoryRepository inventoryRepository;
+
+        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository, IInventoryRepository inventoryRepository)
         {
             _rentalRepository = rentalRepository;
             _customerRepository = customerRepository;
             _filmRepository = filmRepository;
+            this.inventoryRepository = inventoryRepository;
         }
         // GET: RentalController
         public async Task<IActionResult> Index(int page = 1)
@@ -49,11 +52,23 @@ namespace RetroVHSRental.Controllers
         {
             var customers = await _customerRepository.GetAllAsync();
             var film = await _filmRepository.GetByIdAsync(id);
+            var inventories = await inventoryRepository.GetAllAsync();
+
+            //Sorting out all the posts in dbo.rental where ReturnDate=null so that you can't rent the same movie at the same time. 
+            var rentedInventoryIds = await _rentalRepository.GetAllAsync();
+            var rentedIds = rentedInventoryIds
+                .Where(r => r.ReturnDate == null)
+                .Select(r => r.InventoryId)
+                .ToList();
+            var availableInventories = inventories
+                .Where(i => !rentedIds.Contains(i.InventoryId))
+                .ToList();
 
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
+            ViewBag.Inventory = new SelectList(availableInventories.Where(f => f.FilmId == id).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
             ViewBag.Film = film;
 
-            var rental = new Rental { RentalDate = DateTime.Now};
+            var rental = new Rental { RentalDate = DateTime.Now, FilmId=id};
             return View(rental);
         }
 
@@ -65,7 +80,6 @@ namespace RetroVHSRental.Controllers
             rental.last_update = DateTime.Now;
             if (ModelState.IsValid)
             {
-                
                 await _rentalRepository.AddAsync(rental);
                 return RedirectToAction(nameof(Index));
             }
