@@ -6,6 +6,7 @@ namespace RetroVHSRental.Repository
     {
         Task<Film>GetByIdAsync(int id);
         Task<IEnumerable<Film>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
 
         //Pagination
         Task<IEnumerable<Film>> GetAllAsync(int pageNumber, int pageSize);
