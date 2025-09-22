@@ -21,7 +21,7 @@
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-body-tertiary" data-bs-theme="dark">
             <div class="container-fluid">
                 <img src="~/images/RetroTapesLogo.png" alt="RetroTapes logo" style="height: 60px; margin-right: 10px;">
-                <a class="navbar-brand" href="#">Retro VHS Tapes</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Retro VHS Tapes</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
                         aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -34,28 +34,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Films" asp-action="Index">Films</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Rental" asp-action="Index">Rentals</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                <span>Alt. dropdown</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Films</a></li>
-                                <li><a class="dropdown-item" href="#">Rentals</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#"><span>Home/contact etc</span></a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                        </ul>
+                        <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <span>Admin Menu</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Rental" asp-action="Index">Rentals</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>

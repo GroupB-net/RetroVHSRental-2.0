@@ -78,7 +78,7 @@ button,
 
 .form-control:focus {
     background-color: var(--dark1);
-    color: var(--red);
+    color: var(--orange);
     border-color: var(--orange);
     box-shadow: 0 0 5px var(--orange);
 }
@@ -181,6 +181,17 @@ p {
     background-color: #4a3902;
     color: #fff3c2;
 }
+
+.btn-outline-success {
+    background-color: var(--red);
+    color: white;
+    font-weight: 300;
+    border: 1px solid var(--orange);
+}
+
+    .btn-outline-success:hover {
+        border: 1px solid var(--yellow);
+    }
 
 body {
     margin: 100px;
