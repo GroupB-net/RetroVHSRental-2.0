@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RetroVHSRental.Models;
 using RetroVHSRental.Repository;
 
@@ -11,11 +12,13 @@ namespace RetroVHSRental.Controllers
         private readonly ICustomerRepository _customerRepository;
         private readonly IFilmRepository _filmRepository;
         private readonly IStaffRepository _staffRepository;
-        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository, IStaffRepository staffRepository)
+        private readonly IInventoryRepository inventoryRepository;
+        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository, IStaffRepository staffRepository, IInventoryRepository inventoryRepository)
         {
             _rentalRepository = rentalRepository;
             _customerRepository = customerRepository;
             _filmRepository = filmRepository;
+            this.inventoryRepository = inventoryRepository;
             _staffRepository = staffRepository;
         }
         // GET: RentalController
@@ -48,11 +51,26 @@ namespace RetroVHSRental.Controllers
         // GET: RentalController/Create
         public async Task<IActionResult> Create(int id)
         {
-            ViewBag.Customer = await _customerRepository.GetAllAsync();
-            ViewBag.Film = await _filmRepository.GetByIdAsync(id);
-            ViewBag.Staff = await _staffRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync();
+            var film = await _filmRepository.GetByIdAsync(id);
+            var inventories = await inventoryRepository.GetAllAsync();
 
-            return View();
+            //Sorting out all the posts in dbo.rental where ReturnDate=null so that you can't rent the same movie at the same time. 
+            var rentedInventoryIds = await _rentalRepository.GetAllAsync();
+            var rentedIds = rentedInventoryIds
+                .Where(r => r.ReturnDate == null)
+                .Select(r => r.InventoryId)
+                .ToList();
+            var availableInventories = inventories
+                .Where(i => !rentedIds.Contains(i.InventoryId))
+                .ToList();
+
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
+            ViewBag.Inventory = new SelectList(availableInventories.Where(f => f.FilmId == id).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
+            ViewBag.Film = film;
+
+            var rental = new Rental { RentalDate = DateTime.Now, FilmId=id};
+            return View(rental);
         }
 
         // POST: RentalController/Create
@@ -60,18 +78,18 @@ namespace RetroVHSRental.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Rental rental)
         {
+            rental.last_update = DateTime.Now;
             if (ModelState.IsValid)
-              {
-                  rental.RentalDate = DateTime.Now;
-                  await _rentalRepository.AddAsync(rental);
-                  return RedirectToAction(nameof(Index));
-              }
-
-            ViewBag.Customer = await _customerRepository.GetAllAsync();
+            {
+                await _rentalRepository.AddAsync(rental);
+                return RedirectToAction(nameof(Index));
+            }
+            var customers = await _customerRepository.GetAllAsync();
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Film = await _filmRepository.GetAllAsync();
             ViewBag.Staff = await _staffRepository.GetAllAsync();
             return View(rental);
-         
+
         }
 
         // GET: RentalController/Edit/5
@@ -117,7 +135,7 @@ namespace RetroVHSRental.Controllers
             try
             {
                 var rental = await _rentalRepository.GetByIdAsync(id);
-                if (rental!=null)
+                if (rental != null)
                 {
                     await _rentalRepository.RemoveAsync(rental);
 

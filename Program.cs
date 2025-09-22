@@ -18,6 +18,7 @@ namespace RetroVHSRental
             builder.Services.AddTransient<IFilmRepository, FilmRepository>();
             builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
             builder.Services.AddTransient<IStaffRepository, StaffRepository>();
+            builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
