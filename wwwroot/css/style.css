@@ -244,3 +244,7 @@ a:hover {
     text-align: center;
     font-weight: lighter;
 }
+select{
+    position: relative;
+    z-index: 9999;
+}
