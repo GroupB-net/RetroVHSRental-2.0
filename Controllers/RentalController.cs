@@ -10,11 +10,13 @@ namespace RetroVHSRental.Controllers
         private readonly IRentalRepository _rentalRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IFilmRepository _filmRepository;
-        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository)
+        private readonly IStaffRepository _staffRepository;
+        public RentalController(IRentalRepository rentalRepository, ICustomerRepository customerRepository, IFilmRepository filmRepository, IStaffRepository staffRepository)
         {
             _rentalRepository = rentalRepository;
             _customerRepository = customerRepository;
             _filmRepository = filmRepository;
+            _staffRepository = staffRepository;
         }
         // GET: RentalController
         public async Task<IActionResult> Index(int page = 1)
@@ -48,6 +50,7 @@ namespace RetroVHSRental.Controllers
         {
             ViewBag.Customer = await _customerRepository.GetAllAsync();
             ViewBag.Film = await _filmRepository.GetByIdAsync(id);
+            ViewBag.Staff = await _staffRepository.GetAllAsync();
 
             return View();
         }
@@ -66,6 +69,7 @@ namespace RetroVHSRental.Controllers
 
             ViewBag.Customer = await _customerRepository.GetAllAsync();
             ViewBag.Film = await _filmRepository.GetAllAsync();
+            ViewBag.Staff = await _staffRepository.GetAllAsync();
             return View(rental);
          
         }
