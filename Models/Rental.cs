@@ -13,6 +13,7 @@ namespace RetroVHSRental.Models
         public DateTime RentalDate { get; set; }
         [Column("inventory_id")]
         public int InventoryId { get; set; }
+        public Inventory Inventory { get; set; }
         [Column("customer_id")]
         public int CustomerId { get; set; }
         [Column("return_date")]

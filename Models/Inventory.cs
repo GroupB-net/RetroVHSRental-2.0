@@ -11,6 +11,7 @@ namespace RetroVHSRental.Models
         public int InventoryId { get; set; }
         [Column("film_id")]
         public int FilmId { get; set; }
+        public Film Film { get; set; }
         [Column("store_id")]
         public int StoreId { get; set; }
         [Column("last_update")]
