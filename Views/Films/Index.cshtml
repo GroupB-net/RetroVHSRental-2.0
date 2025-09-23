@@ -5,12 +5,23 @@
 
 <h1>Films</h1>
 
-<form method="get" asp-action="Index">
-    <div class="form-group">
+@* <form method="get" asp-action="Index">
+    <div class="mb-2">
         <input type="text" name="searchString" value="@Context.Request.Query["searchString"]" class="form-control" placeholder="Search by title..." />
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Search</button>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form> *@
+
+<form method="get" asp-action="Index" class="d-flex">
+    <div class="form-group flex-grow-1 me-2">
+        <input type="text" name="searchString"
+               value="@Context.Request.Query["searchString"]"
+               class="form-control me-2"
+        placeholder="Search by title or actor"/>
+    </div>
+    <button class="btn btn-outline-success" type="submit">Search</button>
 </form>
+
 
 <p>
     Sort by:
