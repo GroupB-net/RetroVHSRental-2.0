@@ -69,7 +69,7 @@ namespace RetroVHSRental.Controllers
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Inventory = new SelectList(availableInventories.Where(f => f.FilmId == id).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
             ViewBag.Film = film;
-            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.FirstName).Select(s => new { StaffId = s.StaffId, FullName = s.FirstName + " Store: " + s.StoreId }), "StaffId", "FullName");
 
             var rental = new Rental { RentalDate = DateTime.Now, FilmId=id};
             return View(rental);
@@ -90,7 +90,7 @@ namespace RetroVHSRental.Controllers
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Film = await _filmRepository.GetAllAsync();
             var staff = await _staffRepository.GetAllAsync();
-            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.FirstName).Select(s => new { StaffId = s.StaffId, FullName = s.FirstName + " Store: " + s.StoreId }), "StaffId", "FullName");
             return View(rental);
 
         }
@@ -131,7 +131,7 @@ namespace RetroVHSRental.Controllers
         }
 
         // POST: RentalController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
