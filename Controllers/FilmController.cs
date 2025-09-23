@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Numerics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RetroVHSRental.Models;
 using RetroVHSRental.Repository;
 
@@ -14,16 +17,34 @@ namespace RetroVHSRental.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index(string searchString, string sortOrder, int page = 1)
+        public async Task<IActionResult> Index(string searchString, string sortOrder, int page = 1, int? categoryId = null)
         {
             int pageSize = 10; //filmer per sida
+            IEnumerable<Film> films;
 
-            var films = await _filmRepository.GetAllAsync();
+            films = await _filmRepository.GetAllAsync();
 
+            // Kontrollerar om en category-button valts.
+            if (categoryId.HasValue)
+            {
+                films = films.Where(f => f.FilmCategories.Any(fc => fc.CategoryId == categoryId.Value));
+            }
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                films = films.Where(f => f.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+                // Dela upp searchString på mellanslag.
+                var searchParts = searchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                // Kontrollerar searchString och jämför med titel eller actor.
+                films = films.Where(f =>
+                    f.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase) || 
+                    f.FilmActors.Any(fa =>
+                    searchParts.All(part =>
+                    fa.Actor.FirstName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                    fa.Actor.LastName.Contains(part, StringComparison.OrdinalIgnoreCase)
+            )
+        ) 
+    );
             }
 
             // Ordnar
@@ -41,7 +62,8 @@ namespace RetroVHSRental.Controllers
             //pagination
             int totalFilms = films.Count();
             var totalPages = (int)Math.Ceiling(totalFilms / (double)pageSize);
-
+            var categories = await _filmRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = categories;
             var filmsPage = films
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)

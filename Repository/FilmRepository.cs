@@ -14,7 +14,13 @@ namespace RetroVHSRental.Repository
         }
         public async Task<IEnumerable<Film>> GetAllAsync()
         {
-            return await _context.Films.ToListAsync(); 
+            return await _context.Films
+                .Include(f => f.Language)
+            .Include(f => f.FilmCategories)
+                .ThenInclude(fc => fc.Category)
+            .Include(f => f.FilmActors)
+                .ThenInclude(fa => fa.Actor)
+                .ToListAsync(); 
         }
 
         public async Task<Film> GetByIdAsync(int id)
@@ -35,6 +41,11 @@ namespace RetroVHSRental.Repository
         public async Task<int> CountAsync()
         {
             return await _context.Films.CountAsync();
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            return await _context.Categories.OrderBy(c => c.Name).ToListAsync();
         }
     }
 }

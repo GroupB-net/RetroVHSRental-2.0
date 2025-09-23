@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RetroVHSRental.Models.Film>
+@model IEnumerable<RetroVHSRental.Models.Film>
 @{
     ViewData["Title"] = "Films";
 }
@@ -7,7 +7,8 @@
 
 @* <form method="get" asp-action="Index">
     <div class="mb-2">
-        <input type="text" name="searchString" value="@Context.Request.Query["searchString"]" class="form-control" placeholder="Search by title..." />
+        <input type="text" name="searchString" value="@Context.Request.Query["searchString"]" class="form-control" placeholder="Search by title or actor" />
+
     </div>
     <button class="btn btn-outline-success" type="submit">Search</button>
 </form> *@
@@ -29,10 +30,23 @@
     <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSortParm"]">Release Year</a>
 </p>
 
+@* Loopar igenom alla categories och skapar knappar för dem. *@
+<div class="mb-3">
+    @foreach (var category in ViewBag.Categories as IEnumerable<RetroVHSRental.Models.Category>)
+    {
+        <a asp-action="Index" asp-route-categoryId="@category.CategoryId"
+           class="btn btn-primary mt-2">
+            @category.Name
+        </a>
+    }
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
+            <th>Genres</th>
+            <th>Actors</th>
             <th>Description</th>
             <th>Release Year</th>
             <th>Rental Duration</th>
@@ -45,6 +59,8 @@
         {
             <tr>
                 <td>@film.Title</td>
+                <td> @string.Join(", ", film.FilmCategories.Select(fc => fc.Category.Name))</td>
+                <td>@string.Join(", ", film.FilmActors.Select(fa => fa.Actor.FirstName + " " + fa.Actor.LastName))</td>
                 <td>@film.Description</td>
                 <td>@film.Release_year</td>
                 <td>@film.Rental_duration days</td>
