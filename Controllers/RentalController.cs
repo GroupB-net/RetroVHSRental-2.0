@@ -54,6 +54,7 @@ namespace RetroVHSRental.Controllers
             var customers = await _customerRepository.GetAllAsync();
             var film = await _filmRepository.GetByIdAsync(id);
             var inventories = await inventoryRepository.GetAllAsync();
+            var staff = await _staffRepository.GetAllAsync();
 
             //Sorting out all the posts in dbo.rental where ReturnDate=null so that you can't rent the same movie at the same time. 
             var rentedInventoryIds = await _rentalRepository.GetAllAsync();
@@ -68,6 +69,7 @@ namespace RetroVHSRental.Controllers
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Inventory = new SelectList(availableInventories.Where(f => f.FilmId == id).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
             ViewBag.Film = film;
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
 
             var rental = new Rental { RentalDate = DateTime.Now, FilmId=id};
             return View(rental);
@@ -87,7 +89,8 @@ namespace RetroVHSRental.Controllers
             var customers = await _customerRepository.GetAllAsync();
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Film = await _filmRepository.GetAllAsync();
-            ViewBag.Staff = await _staffRepository.GetAllAsync();
+            var staff = await _staffRepository.GetAllAsync();
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
             return View(rental);
 
         }
