@@ -86,7 +86,8 @@ namespace RetroVHSRental.Controllers
             }
             var customers = await _customerRepository.GetAllAsync();
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
-            ViewBag.Film = await _filmRepository.GetAllAsync();
+            var (films, _) = await _filmRepository.GetPagedAsync("", "", 1, 1000); // trae máximo 1000
+            ViewBag.Film = films;
             ViewBag.Staff = await _staffRepository.GetAllAsync();
             return View(rental);
 

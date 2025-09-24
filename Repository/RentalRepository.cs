@@ -40,11 +40,11 @@ namespace RetroVHSRental.Repository
         public async Task<IEnumerable<Rental>> GetPagedAsync(int pageNumber, int pageSize)
         {
             return await context.Rentals
-                .Include(b => b.Customer)
-                .OrderBy(r => r.RentalId)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                 .Include(r => r.Customer)
+        .OrderByDescending(r => r.RentalDate) // 👉 sortera efter RentalDate, senaste först
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
         }
         public async Task<int> CountAsync()
         {

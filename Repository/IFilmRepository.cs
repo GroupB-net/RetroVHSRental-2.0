@@ -4,12 +4,11 @@ namespace RetroVHSRental.Repository
 {
     public interface IFilmRepository
     {
-        Task<Film>GetByIdAsync(int id);
-        Task<IEnumerable<Film>> GetAllAsync();
+        Task<Film> GetByIdAsync(int id);
 
-        //Pagination
-        Task<IEnumerable<Film>> GetAllAsync(int pageNumber, int pageSize);
-        Task<int> CountAsync();
-
+        // Paginering + sökning + sortering
+        Task<(IEnumerable<Film> Films, int TotalCount)> GetPagedAsync(
+            string search, string sortOrder, int pageNumber, int pageSize
+        );
     }
 }

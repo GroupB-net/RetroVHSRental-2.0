@@ -12,29 +12,43 @@ namespace RetroVHSRental.Repository
         {
             _context = context;
         }
-        public async Task<IEnumerable<Film>> GetAllAsync()
-        {
-            return await _context.Films.ToListAsync(); 
-        }
 
         public async Task<Film> GetByIdAsync(int id)
         {
             return await _context.Films.FirstOrDefaultAsync(f => f.FilmId == id);
         }
 
-        //Pagination
-        public async Task<IEnumerable<Film>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Film> Films, int TotalCount)> GetPagedAsync(
+            string search, string sortOrder, int pageNumber, int pageSize)
         {
-            return await _context.Films
-                .OrderBy(f => f.FilmId)
+            var query = _context.Films.AsQueryable();
+
+            // Filtrering
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(f => f.Title.Contains(search));
+            }
+
+            // Sortering
+            query = sortOrder switch
+            {
+                "title_desc" => query.OrderByDescending(f => f.Title),
+                "Year" => query.OrderBy(f => f.Release_year),
+                "year_desc" => query.OrderByDescending(f => f.Release_year),
+                _ => query.OrderBy(f => f.Title),
+            };
+
+            // Antal före pagination
+            var totalCount = await query.CountAsync();
+
+            // Pagination
+            var films = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-        }
 
-        public async Task<int> CountAsync()
-        {
-            return await _context.Films.CountAsync();
+            return (films, totalCount);
         }
     }
 }
+

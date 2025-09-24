@@ -4,7 +4,7 @@ using RetroVHSRental.Repository;
 
 namespace RetroVHSRental.Controllers
 {
-    public class FilmsController : Controller
+     public class FilmsController : Controller
     {
         private readonly IFilmRepository _filmRepository;
 
@@ -16,44 +16,24 @@ namespace RetroVHSRental.Controllers
         // GET: Films
         public async Task<IActionResult> Index(string searchString, string sortOrder, int page = 1)
         {
-            int pageSize = 10; //filmer per sida
+            int pageSize = 10; // filmer per sida
 
-            var films = await _filmRepository.GetAllAsync();
+            var (films, totalCount) = await _filmRepository.GetPagedAsync(searchString, sortOrder, page, pageSize);
 
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                films = films.Where(f => f.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-            }
-
-            // Ordnar
+            // Skicka sortering till View
             ViewData["TitleSortParm"] = string.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["YearSortParm"] = sortOrder == "Year" ? "year_desc" : "Year";
 
-            films = sortOrder switch
-            {
-                "title_desc" => films.OrderByDescending(f => f.Title),
-                "Year" => films.OrderBy(f => f.Release_year),
-                "year_desc" => films.OrderByDescending(f => f.Release_year),
-                _ => films.OrderBy(f => f.Title),
-            };
-
-            //pagination
-            int totalFilms = films.Count();
-            var totalPages = (int)Math.Ceiling(totalFilms / (double)pageSize);
-
-            var filmsPage = films
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
+            // Skicka pagination info
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = page;
+            ViewBag.SearchString = searchString;
+            ViewBag.SortOrder = sortOrder;
 
-
-            return View(filmsPage);
+            return View(films);
         }
-
 
         // GET: Films/Details/5
         public async Task<IActionResult> Details(int id)
