@@ -153,7 +153,8 @@ namespace RetroVHSRental.Controllers
 
         public async Task<IActionResult> ExpiringToday()
         {
-            ViewBag.Rental = await _rentalRepository.RentalsExpiringToday();
+            var expiringRentals = await _rentalRepository.RentalsExpiringToday();
+            ViewBag.ExpiringRentals = expiringRentals;
             return View();
 
         }

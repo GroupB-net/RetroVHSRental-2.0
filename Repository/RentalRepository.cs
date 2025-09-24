@@ -54,11 +54,11 @@ namespace RetroVHSRental.Repository
         public async Task<IEnumerable<Rental>> RentalsExpiringToday()
         {
             var todaysDate = DateTime.Today; //skapar en variabel för dagens datum
-            var tomorrow = todaysDate.AddDays(1);
             return await context.Rentals
                 .Include(r => r.Inventory)
                 .ThenInclude(i => i.Film)
-                .Where(r => EF.Functions.DateDiffDay(r.RentalDate, todaysDate) == r.Inventory.Film.Rental_duration)
+                .Include(r => r.Customer)
+                .Where(r => EF.Functions.DateDiffDay(r.RentalDate, todaysDate) == r.Inventory.Film.Rental_duration && r.ReturnDate == null)
                 .ToListAsync();
             
         }

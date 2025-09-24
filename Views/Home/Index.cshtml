@@ -10,15 +10,17 @@
     <thead>
             <tr>
                 <th>Customer</th>
-                <th>Return Date</th>
+                <th>Rental Id</th>
+                <th>Film Id</th>
             </tr>
     </thead>
     <tbody>
             @foreach (var rental in ViewBag.ExpiringRentals as IEnumerable<RetroVHSRental.Models.Rental>)
             {
                 <tr>
-                    <td>@rental.CustomerId</td>
-                    <td>@rental.ReturnDate</td>
+                    <td>@rental.Customer.FirstName @rental.Customer.LastName</td>
+                    <td>@rental.RentalId</td>
+                    <td>@rental.FilmId</td>
                 </tr>
         }
         
