@@ -86,13 +86,29 @@ namespace RetroVHSRental.Controllers
                 await _rentalRepository.AddAsync(rental);
                 return RedirectToAction(nameof(Index));
             }
-            var customers = await _customerRepository.GetAllAsync();
-            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
-            ViewBag.Film = await _filmRepository.GetAllAsync();
-            var staff = await _staffRepository.GetAllAsync();
-            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
-            return View(rental);
 
+            // Samma logik som i GET för att bara visa ledig inventory om modelstate misslyckas
+            var customers = await _customerRepository.GetAllAsync();
+            var inventories = await inventoryRepository.GetAllAsync();
+            var staff = await _staffRepository.GetAllAsync();
+
+            var rentedInventoryIds = await _rentalRepository.GetAllAsync();
+            var rentedIds = rentedInventoryIds
+                .Where(r => r.ReturnDate == null)
+                .Select(r => r.InventoryId)
+                .ToList();
+
+            var availableInventories = inventories
+                .Where(i => !rentedIds.Contains(i.InventoryId))
+                .ToList();
+
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
+            ViewBag.Inventory = new SelectList(
+                availableInventories.Where(f => f.FilmId == rental.FilmId).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
+            ViewBag.Film = await _filmRepository.GetByIdAsync(rental.FilmId);
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
+
+            return View(rental);
         }
 
         // GET: RentalController/Edit/5
