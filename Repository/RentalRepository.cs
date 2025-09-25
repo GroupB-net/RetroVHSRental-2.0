@@ -14,7 +14,7 @@ namespace RetroVHSRental.Repository
         }
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            return await context.Rentals.ToListAsync();
+            return await context.Rentals.OrderByDescending(r => r.RentalDate).ToListAsync();
         }
         public async Task<Rental> GetByIdAsync(int id)
         {
@@ -41,7 +41,7 @@ namespace RetroVHSRental.Repository
         {
             return await context.Rentals
                 .Include(b => b.Customer)
-                .OrderBy(r => r.RentalId)
+                .OrderByDescending(r => r.RentalDate)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
