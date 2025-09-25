@@ -16,58 +16,34 @@
 
 <h1>Rentals</h1>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InventoryId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReturnDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StaffId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.last_update)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th></th>
+            <th>RentalDate</th>
+            <th>InventoryId</th>
+            <th>ReturnDate</th>
+            <th>StaffId</th>
+            <th>Last_update</th>
+            <th>CustomerId</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RentalDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InventoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.last_update)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RentalId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RentalId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RentalId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.RentalDate</td>
+                <td>@rental.InventoryId</td>
+                <td>@(rental.ReturnDate.HasValue ? rental.ReturnDate.Value.ToString() : "Not returned")</td>
+                <td>@rental.StaffId</td>
+                <td>@rental.last_update</td>
+                <td>@rental.Customer.CustomerId</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@rental.RentalId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@rental.RentalId" class="btn btn-primary">Details</a>
+                    <a asp-action="Delete" asp-route-id="@rental.RentalId" class="btn btn-primary">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

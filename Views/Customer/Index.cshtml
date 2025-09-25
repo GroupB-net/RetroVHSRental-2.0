@@ -74,9 +74,9 @@
                 @Html.DisplayFor(modelItem => item.LastUpdate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.CustomerId" class="btn btn-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.CustomerId" class="btn btn-primary">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.CustomerId" class="btn btn-primary">Delete</a>
             </td>
         </tr>
 }
