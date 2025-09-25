@@ -107,16 +107,25 @@ namespace RetroVHSRental.Controllers
         }
 
         // POST: RentalController/Edit/5
-        [HttpPost]
+        [HttpPost, ActionName("EditReturnDate")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Rental rental)
+        public async Task<IActionResult> EditConfirmed(int rentalId)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _rentalRepository.UpdateAsync(rental);
+                var rental = await _rentalRepository.GetByIdAsync(rentalId);
+                rental.ReturnDate = DateTime.Now;
+                if (rental != null)
+                {
+                    await _rentalRepository.UpdateAsync(rental);
+
+                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(rental);
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: RentalController/Delete/5
