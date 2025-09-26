@@ -1,0 +1,57 @@
+﻿@model RetroVHSRental.Models.Rental
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<h3>Are you sure you want to return this?</h3>
+<div>
+    <h4>Rental</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RentalDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RentalDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InventoryId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.InventoryId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReturnDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReturnDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StaffId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StaffId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.last_update)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.last_update)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.CustomerId)
+        </dd>
+    </dl>
+
+    <form asp-action="EditReturnDate">
+        <input type="hidden" asp-for="RentalId" />
+        <input type="submit" value="Yes" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

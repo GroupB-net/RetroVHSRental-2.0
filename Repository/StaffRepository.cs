@@ -20,7 +20,7 @@ namespace RetroVHSRental.Repository
 
         public async Task<IEnumerable<Staff>> GetAllAsync()
         {
-            return await context.Staff.ToListAsync();
+            return await context.Staff.Where(s => s.StoreId==1).ToListAsync();
         }
 
         public async Task<Staff> GetByIdAsync(int id)
