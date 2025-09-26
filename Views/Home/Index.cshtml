@@ -3,15 +3,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
+<div style="width: 50%">
     <h4>Rentals expiring today</h4>
 
-    <table class="table">
+    @if (ViewBag.ExpiringRentals != null && ((List<Rental>)ViewBag.ExpiringRentals).Count > 0)
+    { 
+    <table class="table table-striped">
     <thead>
             <tr>
                 <th>Customer</th>
                 <th>Rental Id</th>
-                <th>Film Id</th>
             </tr>
     </thead>
     <tbody>
@@ -20,14 +21,24 @@
                 <tr>
                     <td>@rental.Customer.FirstName @rental.Customer.LastName</td>
                     <td>@rental.RentalId</td>
-                    <td>@rental.FilmId</td>
+                    <td style="text-align:right">
+                        <a asp-action="Details" asp-controller="Rental" asp-route-id="@rental.RentalId" class="btn btn-primary">Details</a>
+                   </td>
                 </tr>
         }
         
     </tbody> 
 </table>
-
+    }
+    else
+    {
+        <p>No expiring rentals today.</p>
+    }
 </div>
+
+   
+   
+
 
 <div class="row">
     <div class="col-sm-6 mb-3 mb-sm-0">
