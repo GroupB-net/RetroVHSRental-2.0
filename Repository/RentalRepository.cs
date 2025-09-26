@@ -18,7 +18,9 @@ namespace RetroVHSRental.Repository
         }
         public async Task<Rental> GetByIdAsync(int id)
         {
-            return await context.Rentals.FirstOrDefaultAsync(b => b.RentalId == id);
+            return await context.Rentals
+                .Include(b => b.Customer)
+                .FirstOrDefaultAsync(b => b.RentalId == id);
         }
         public async Task AddAsync(Rental rental)
         {
