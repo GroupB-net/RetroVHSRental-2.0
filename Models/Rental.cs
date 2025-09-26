@@ -13,7 +13,7 @@ namespace RetroVHSRental.Models
         public DateTime RentalDate { get; set; }
         [Column("inventory_id")]
         public int InventoryId { get; set; }
-        public Inventory Inventory { get; set; }
+        public Inventory? Inventory { get; set; }
         [Column("customer_id")]
         public int CustomerId { get; set; }
         [Column("return_date")]
@@ -22,7 +22,7 @@ namespace RetroVHSRental.Models
         public byte StaffId { get; set; }
         [Column("last_update")]
         public DateTime last_update { get; set; }
-        public virtual Customer? Customer { get; set; }
+        public Customer? Customer { get; set; }
         [NotMapped]
         public int FilmId { get; set; }
     }
