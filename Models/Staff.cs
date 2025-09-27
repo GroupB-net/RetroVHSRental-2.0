@@ -27,5 +27,7 @@ namespace RetroVHSRental.Models
         public required string Password { get; set; }
         [Column("last_update")]
         public DateTime Last_Update { get; set; }
+
+     
     }
 }

@@ -17,6 +17,8 @@ namespace RetroVHSRental.Data
         public DbSet<FilmCategory> FilmCategories { get; set; }
         public DbSet<FilmActor> FilmActors { get; set; }
         public DbSet<Category> Categories { get; set; }
+        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

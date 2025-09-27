@@ -1,7 +1,4 @@
-﻿using System.Numerics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using RetroVHSRental.Models;
 using RetroVHSRental.Repository;
 
@@ -19,63 +16,25 @@ namespace RetroVHSRental.Controllers
         // GET: Films
         public async Task<IActionResult> Index(string searchString, string sortOrder, int page = 1, int? categoryId = null)
         {
-            int pageSize = 10; //filmer per sida
-            IEnumerable<Film> films;
+            int pageSize = 10; // filmer per sida
 
-            films = await _filmRepository.GetAllAsync();
+            var (films, totalCount) = await _filmRepository.GetPagedAsync(
+                searchString, sortOrder, page, pageSize, categoryId);
 
-            // Kontrollerar om en category-button valts.
-            if (categoryId.HasValue)
-            {
-                films = films.Where(f => f.FilmCategories.Any(fc => fc.CategoryId == categoryId.Value));
-            }
+            ViewBag.TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            ViewBag.CurrentPage = page;
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                // Dela upp searchString på mellanslag.
-                var searchParts = searchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            ViewBag.SearchString = searchString;
+            ViewBag.SortOrder = sortOrder;
 
-                // Kontrollerar searchString och jämför med titel eller actor.
-                films = films.Where(f =>
-                    f.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase) || 
-                    f.FilmActors.Any(fa =>
-                    searchParts.All(part =>
-                    fa.Actor.FirstName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
-                    fa.Actor.LastName.Contains(part, StringComparison.OrdinalIgnoreCase)
-            )
-        ) 
-    );
-            }
+            var categories = await _filmRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = categories;
 
-            // Ordnar
             ViewData["TitleSortParm"] = string.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["YearSortParm"] = sortOrder == "Year" ? "year_desc" : "Year";
 
-            films = sortOrder switch
-            {
-                "title_desc" => films.OrderByDescending(f => f.Title),
-                "Year" => films.OrderBy(f => f.Release_year),
-                "year_desc" => films.OrderByDescending(f => f.Release_year),
-                _ => films.OrderBy(f => f.Title),
-            };
-
-            //pagination
-            int totalFilms = films.Count();
-            var totalPages = (int)Math.Ceiling(totalFilms / (double)pageSize);
-            var categories = await _filmRepository.GetAllCategoriesAsync();
-            ViewBag.Categories = categories;
-            var filmsPage = films
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            ViewBag.TotalPages = totalPages;
-            ViewBag.CurrentPage = page;
-
-
-            return View(filmsPage);
+            return View(films);
         }
-
 
         // GET: Films/Details/5
         public async Task<IActionResult> Details(int id)

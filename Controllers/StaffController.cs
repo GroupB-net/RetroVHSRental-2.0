@@ -88,36 +88,36 @@ namespace RetroVHSRental.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(byte id, [Bind("StaffId,FirstName,LastName,Email,StoreId,Username,Password,Last_Update")] Staff staff)
-        {
-            if (id != staff.StaffId)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(byte id, [Bind("StaffId,FirstName,LastName,Email,StoreId,Username,Password,Last_Update")] Staff staff)
+        //{
+        //    if (id != staff.StaffId)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    staff.Last_Update = DateTime.Now;
-                    _context.Update(staff);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StaffExists(staff.StaffId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(staff);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            staff.Last_Update = DateTime.Now;
+        //            _context.Update(staff);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!StaffExists(staff.StaffId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(staff);
+        //}
 
         // GET: Staff/Delete/5
         public async Task<IActionResult> Delete(byte? id)

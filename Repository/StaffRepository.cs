@@ -23,7 +23,7 @@ namespace RetroVHSRental.Repository
             return await context.Staff.Where(s => s.StoreId==1).ToListAsync();
         }
 
-        public async Task<Staff> GetByIdAsync(int id)
+        public async Task<Staff> GetByIdAsync(byte id)
         {
             return await context.Staff.FirstOrDefaultAsync(s => s.StaffId == id);
         }
