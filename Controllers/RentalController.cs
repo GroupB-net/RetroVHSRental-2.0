@@ -69,7 +69,7 @@ namespace RetroVHSRental.Controllers
             ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
             ViewBag.Inventory = new SelectList(availableInventories.Where(f => f.FilmId == id).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
             ViewBag.Film = film;
-            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.FirstName).Select(s => new { StaffId = s.StaffId, FullName = s.FirstName + " Store: " + s.StoreId }), "StaffId", "FullName");
 
             var rental = new Rental { RentalDate = DateTime.Now, FilmId=id};
             return View(rental);
@@ -86,13 +86,29 @@ namespace RetroVHSRental.Controllers
                 await _rentalRepository.AddAsync(rental);
                 return RedirectToAction(nameof(Index));
             }
-            var customers = await _customerRepository.GetAllAsync();
-            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
-            ViewBag.Film = await _filmRepository.GetAllAsync();
-            var staff = await _staffRepository.GetAllAsync();
-            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
-            return View(rental);
 
+            // Samma logik som i GET för att bara visa ledig inventory om modelstate misslyckas
+            var customers = await _customerRepository.GetAllAsync();
+            var inventories = await inventoryRepository.GetAllAsync();
+            var staff = await _staffRepository.GetAllAsync();
+
+            var rentedInventoryIds = await _rentalRepository.GetAllAsync();
+            var rentedIds = rentedInventoryIds
+                .Where(r => r.ReturnDate == null)
+                .Select(r => r.InventoryId)
+                .ToList();
+
+            var availableInventories = inventories
+                .Where(i => !rentedIds.Contains(i.InventoryId))
+                .ToList();
+
+            ViewBag.Customer = new SelectList(customers.OrderBy(c => c.Email), "CustomerId", "Email");
+            ViewBag.Inventory = new SelectList(
+                availableInventories.Where(f => f.FilmId == rental.FilmId).Where(s => s.StoreId == 1), "InventoryId", "InventoryId");
+            ViewBag.Film = await _filmRepository.GetByIdAsync(rental.FilmId);
+            ViewBag.Staff = new SelectList(staff.OrderBy(s => s.StaffId), "StaffId", "FirstName");
+
+            return View(rental);
         }
 
         // GET: RentalController/Edit/5
@@ -107,16 +123,25 @@ namespace RetroVHSRental.Controllers
         }
 
         // POST: RentalController/Edit/5
-        [HttpPost]
+        [HttpPost, ActionName("EditReturnDate")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Rental rental)
+        public async Task<IActionResult> EditConfirmed(int rentalId)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _rentalRepository.UpdateAsync(rental);
+                var rental = await _rentalRepository.GetByIdAsync(rentalId);
+                rental.ReturnDate = DateTime.Now;
+                if (rental != null)
+                {
+                    await _rentalRepository.UpdateAsync(rental);
+
+                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(rental);
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: RentalController/Delete/5
@@ -131,7 +156,7 @@ namespace RetroVHSRental.Controllers
         }
 
         // POST: RentalController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

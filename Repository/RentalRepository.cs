@@ -14,11 +14,13 @@ namespace RetroVHSRental.Repository
         }
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            return await context.Rentals.ToListAsync();
+            return await context.Rentals.OrderByDescending(r => r.RentalDate).ToListAsync();
         }
         public async Task<Rental> GetByIdAsync(int id)
         {
-            return await context.Rentals.FirstOrDefaultAsync(b => b.RentalId == id);
+            return await context.Rentals
+                .Include(b => b.Customer)
+                .FirstOrDefaultAsync(b => b.RentalId == id);
         }
         public async Task AddAsync(Rental rental)
         {
@@ -41,7 +43,7 @@ namespace RetroVHSRental.Repository
         {
             return await context.Rentals
                 .Include(b => b.Customer)
-                .OrderBy(r => r.RentalId)
+                .OrderByDescending(r => r.RentalDate)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
