@@ -38,9 +38,9 @@
                 <td>@rental.last_update</td>
                 <td>@rental.Customer.CustomerId</td>
                 <td>
-                    @if(item.ReturnDate == null)
+                    @if(rental.ReturnDate == null)
                     {
-                        <text><a asp-action="Edit" asp-route-id="@item.RentalId">Return Film</a> |</text>
+                        <a asp-action="Edit" asp-route-id="@rental.RentalId" class="btn btn-primary">Return Film</a>
                     }
                     <a asp-action="Details" asp-route-id="@rental.RentalId" class="btn btn-primary">Details</a>
                     <a asp-action="Delete" asp-route-id="@rental.RentalId" class="btn btn-primary">Delete</a>
